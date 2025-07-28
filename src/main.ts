@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const mobileMenuToggle = document.querySelector('.mobile-menu-toggle') as HTMLButtonElement;
   const navbarMenu = document.querySelector('.navbar-menu') as HTMLUListElement;
   const navbarLinks = document.querySelectorAll('.navbar-link');
-  const heroButtons = document.querySelectorAll('.hero-buttons .btn');
+  const avoirButtons = document.querySelectorAll('.avoir-buttons .btn');
   const sectionButtons = document.querySelectorAll('.section-container .btn');
 
   const animatedText = document.querySelector('.animated-text') as HTMLElement;
@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  heroButtons.forEach(button => {
+  avoirButtons.forEach(button => {
     button.addEventListener('click', (e) => {
       const buttonText = button.textContent?.toLowerCase();
       

@@ -11,17 +11,17 @@
   --secondary-color: #64748b;
   --secondary-hover: #475569;
   --background: #0f0f0f;
-  --surface: #1a1a1a;
+  --surface: #000000;
   --surface-hover: #2f2f2f;
   --text-primary: #e8eaed;
-  --text-secondary: #e8eaed;
+  --text-secondary: rgb(182, 184, 188);
   --text-muted: #5f6368;
   --border: #3c4043;
   --border-light: #2f2f2f;
   --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.6), 0 8px 10px -6px rgb(0 0 0 / 0.6);
-  --gradient: linear-gradient(135deg, #A3C9FE 0%, #B8E6B8 100%);
+  --gradient: linear-gradient(135deg, #f97316 0%, #8b5cf6 100%);
   --border-radius: 0.5rem;
   --border-radius-lg: 1rem;
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
@@ -45,7 +45,7 @@ body {
   left: 0;
   right: 0;
   z-index: 1000;
-  background: rgba(15, 15, 15, 0.95);
+  background: var(--background);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid transparent;
   padding: 1rem 0;
@@ -53,9 +53,9 @@ body {
 }
 
 .navbar.scrolled {
-  background: rgba(15, 15, 15, 0.98);
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
-  border-bottom: 1px solid var(--border);
+  background: rgba(15, 15, 15, 0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: none;
 }
 
 .navbar-container {
@@ -163,8 +163,8 @@ main {
   margin-top: 0;
 }
 
-.hero {
-  min-height: calc(100vh - 160px);
+.avoir {
+  min-height: calc(100vh);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -175,12 +175,12 @@ main {
 
 
 
-.hero-container {
+.avoir-container {
   max-width: 800px;
   padding: 0 2rem;
 }
 
-.hero-title {
+.avoir-title {
   font-size: clamp(3rem, 8vw, 6rem);
   font-weight: 800;
   line-height: 1.1;
@@ -209,8 +209,8 @@ main {
   }
 }
 
-.hero-subtitle {
-  margin-bottom: 2rem;
+.avoir-subtitle {
+  margin-bottom: 5rem;
   opacity: 0;
   animation: fadeIn 0.8s ease 0.4s forwards;
   text-align: center;
@@ -218,10 +218,10 @@ main {
 
 .subtitle-line-1 {
   font-size: clamp(3.5rem, 6vw, 4rem);
-  font-weight: 800;
-  color: var(--text-primary);
+  font-weight: 500;
+  color: #FFF;
   line-height: 1.1;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .gradient-text {
@@ -233,7 +233,7 @@ main {
 
 .subtitle-line-2 {
   font-size: clamp(6rem, 6vw, 4rem);
-  font-weight: 800;
+  font-weight: 500;
   line-height: 1.1;
 }
 
@@ -242,7 +242,7 @@ main {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-weight: 800;
+  font-weight: 500;
   position: relative;
   display: inline-block;
   min-width: 300px;
@@ -251,7 +251,8 @@ main {
 
 .animated-text::after {
   content: '|';
-  background: var(--gradient);
+  background: #8b5cf6;
+  font-weight: 300;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -264,7 +265,7 @@ main {
   51%, 100% { opacity: 0; }
 }
 
-.hero-description {
+.avoir-description {
   font-size: 1.25rem;
   font-weight: 500;
   color: var(--text-secondary);
@@ -283,7 +284,7 @@ main {
   }
 }
 
-.hero-buttons {
+.avoir-buttons {
   display: flex;
   gap: 1rem;
   justify-content: center;
@@ -292,7 +293,7 @@ main {
   animation: fadeIn 0.8s ease 0.9s forwards;
 }
 
-.hero-buttons .btn {
+.avoir-buttons .btn {
   min-width: 150px;
   height: 52px;
   text-align: center;
@@ -320,7 +321,7 @@ main {
 .section-description {
   font-size: 1.125rem;
   color: var(--text-secondary);
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
@@ -455,7 +456,7 @@ main {
 }
 
 .console-header {
-  background: var(--surface-hover);
+  background: var(--surface);
   padding: 1rem;
   border-bottom: 1px solid var(--border);
 }
@@ -474,6 +475,11 @@ main {
   color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.tab:hover {
+  color: var(--text-primary);
+  background: var(--surface-hover);
 }
 
 .tab.active {
@@ -626,11 +632,11 @@ main {
     padding: 0 1rem;
   }
   
-  .hero-container {
+  .avoir-container {
     padding: 0 1rem;
   }
   
-  .hero-buttons {
+  .avoir-buttons {
     flex-direction: column;
     align-items: center;
   }
@@ -675,11 +681,11 @@ main {
 }
 
 @media (max-width: 480px) {
-  .hero-title {
+  .avoir-title {
     font-size: 2.5rem;
   }
   
-  .hero-description {
+  .avoir-description {
     font-size: 1rem;
   }
   
