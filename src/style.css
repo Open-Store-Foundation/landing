@@ -539,9 +539,9 @@ main {
 }
 
 .footer {
-  background: var(--text-primary);
+  background: #1a1a1a;
   color: white;
-  padding: 4rem 0 2rem;
+  padding: 3rem 0 2rem;
 }
 
 .footer-container {
