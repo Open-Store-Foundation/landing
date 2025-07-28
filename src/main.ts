@@ -79,10 +79,10 @@ document.addEventListener('DOMContentLoaded', () => {
         navbarMenu.style.top = '100%';
         navbarMenu.style.left = '0';
         navbarMenu.style.right = '0';
-        navbarMenu.style.background = 'rgba(255, 255, 255, 0.98)';
-        navbarMenu.style.backdropFilter = 'blur(10px)';
+        navbarMenu.style.background = 'rgba(15, 15, 15, 0.95)';
+        navbarMenu.style.backdropFilter = 'blur(20px)';
         navbarMenu.style.padding = '1rem 2rem';
-        navbarMenu.style.boxShadow = '0 4px 6px -1px rgb(0 0 0 / 0.1)';
+        navbarMenu.style.boxShadow = '0 8px 32px rgba(255, 255, 255, 0.1)';
         navbarMenu.style.zIndex = '1000';
         mobileMenuToggle.textContent = '✕';
       } else {
