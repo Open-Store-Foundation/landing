@@ -543,6 +543,7 @@ main {
   opacity: 0.1;
 }
 
+
 .footer {
   background: #000000;
   color: var(--text-primary);
@@ -628,6 +629,7 @@ main {
 @media (max-width: 768px) {
   .navbar-menu {
     display: none;
+    backdrop-filter: none !important;
   }
   
   .mobile-menu-toggle {
