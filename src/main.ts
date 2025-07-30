@@ -1,6 +1,143 @@
 import './style.css';
 
+// Centralized URL configuration
+const URLS = {
+  // External links
+  whitepaper: 'https://github.com/Open-Store-Foundation/whitepaper/blob/main/Open-Store-Whitepaper-Ru.pdf',
+  docs: 'https://docs.openstore.foundation',
+  github: 'https://github.com/Open-Store-Foundation',
+  studio: 'https://studio.openstore.foundation',
+  
+  // Community links
+  telegram: 'https://t.me/openstore_community',
+  discord: 'https://discord.gg/CPmjuPNt',
+  twitter: '#', // Add when available
+  
+  // Legal links
+  termsOfService: 'https://docs.openstore.foundation/terms-of-service',
+  privacyPolicy: 'https://docs.openstore.foundation/privacy-policy',
+  
+  // Internal links
+  download: 'download.html',
+  home: 'index.html'
+};
+
+// Function to set up navbar links
+const setupNavbarLinks = () => {
+  const navbarLinks = document.querySelectorAll('.navbar-link');
+  navbarLinks.forEach(link => {
+    const text = link.textContent?.toLowerCase();
+    switch (text) {
+      case 'whitepaper':
+        link.setAttribute('href', URLS.whitepaper);
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+        break;
+      case 'docs':
+        link.setAttribute('href', URLS.docs);
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+        break;
+      case 'github':
+        link.setAttribute('href', URLS.github);
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+        break;
+      case 'community':
+        link.setAttribute('href', URLS.telegram);
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+        break;
+    }
+  });
+};
+
+// Function to set up social media links
+const setupSocialLinks = () => {
+  const socialLinks = document.querySelectorAll('.social-link');
+  socialLinks.forEach(link => {
+    const title = link.getAttribute('title')?.toLowerCase();
+    switch (title) {
+      case 'telegram':
+        link.setAttribute('href', URLS.telegram);
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+        break;
+      case 'discord':
+        link.setAttribute('href', URLS.discord);
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+        break;
+      case 'x (twitter)':
+        link.setAttribute('href', URLS.twitter);
+        if (URLS.twitter !== '#') {
+          link.setAttribute('target', '_blank');
+          link.setAttribute('rel', 'noopener noreferrer');
+        }
+        break;
+    }
+  });
+};
+
+// Function to set up footer links
+const setupFooterLinks = () => {
+  const footerLinks = document.querySelectorAll('.footer-links a');
+  footerLinks.forEach(link => {
+    const text = link.textContent?.toLowerCase();
+    switch (text) {
+      case 'docs':
+        link.setAttribute('href', URLS.docs);
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+        break;
+      case 'github':
+        link.setAttribute('href', URLS.github);
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+        break;
+      case 'whitepaper':
+        link.setAttribute('href', URLS.whitepaper);
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+        break;
+      case 'terms of service':
+        link.setAttribute('href', URLS.termsOfService);
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+        break;
+      case 'privacy policy':
+        link.setAttribute('href', URLS.privacyPolicy);
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+        break;
+      case 'download':
+        link.setAttribute('href', URLS.download);
+        break;
+      case 'home':
+        link.setAttribute('href', URLS.home);
+        break;
+    }
+  });
+};
+
+// Function to set up publish app buttons
+const setupPublishButtons = () => {
+  const publishButtons = document.querySelectorAll('.btn');
+  publishButtons.forEach(button => {
+    if (button.textContent?.toLowerCase().includes('publish app')) {
+      button.setAttribute('href', URLS.studio);
+      button.setAttribute('target', '_blank');
+      button.setAttribute('rel', 'noopener noreferrer');
+    }
+  });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
+  // Set up all links from centralized URLs
+  setupNavbarLinks();
+  setupSocialLinks(); 
+  setupFooterLinks();
+  setupPublishButtons();
   const mobileMenuToggle = document.querySelector('.mobile-menu-toggle') as HTMLButtonElement;
   const navbarMenu = document.querySelector('.navbar-menu') as HTMLUListElement;
   const navbarLinks = document.querySelectorAll('.navbar-link');
