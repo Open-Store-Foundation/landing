@@ -74,6 +74,14 @@ body {
   font-weight: 700;
   font-size: 1.25rem;
   color: var(--text-primary);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.navbar-brand:hover,
+.navbar-brand:focus {
+  opacity: 0.8;
+  outline: none;
 }
 
 .navbar-brand .logo {
@@ -97,7 +105,12 @@ body {
   border-radius: 50px;
 }
 
-.navbar-link:hover {
+.navbar-link:focus {
+  outline: none;
+}
+
+.navbar-link:hover,
+.navbar-link:focus {
   color: var(--text-primary);
   background: var(--surface-hover);
 }
@@ -133,6 +146,10 @@ body {
   white-space: nowrap;
 }
 
+.btn:focus {
+  outline: none;
+}
+
 .btn-primary {
   background: var(--primary-color);
   color: var(--on-primary-color);
@@ -140,7 +157,8 @@ body {
   box-sizing: border-box;
 }
 
-.btn-primary:hover {
+.btn-primary:hover,
+.btn-primary:focus {
   background: var(--primary-hover);
 }
 
@@ -151,7 +169,8 @@ body {
   box-sizing: border-box;
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover,
+.btn-secondary:focus {
   background: rgba(163, 201, 254, 0.1);
   border-color: var(--primary-color);
   color: var(--primary-color);
@@ -494,7 +513,8 @@ main {
   transition: transform 0.3s ease;
 }
 
-.phone-frame:hover {
+.phone-frame:hover,
+.phone-frame:focus {
   transform: rotateY(0deg) rotateX(0deg);
 }
 
@@ -616,9 +636,17 @@ main {
   color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.tab:hover {
+.tab:focus {
+  outline: none;
+}
+
+.tab:hover,
+.tab:focus {
   color: var(--text-primary);
   background: var(--surface-hover);
   border-radius: 0.375rem;
@@ -839,7 +867,8 @@ main {
   transition: transform 0.3s ease;
 }
 
-.ui-preview-showcase .phone-frame:hover {
+.ui-preview-showcase .phone-frame:hover,
+.ui-preview-showcase .phone-frame:focus {
   transform: rotateY(0deg) rotateX(0deg);
 }
 
@@ -883,7 +912,12 @@ main {
   justify-content: center;
 }
 
-.social-link:hover {
+.social-link:focus {
+  outline: none;
+}
+
+.social-link:hover,
+.social-link:focus {
   color: var(--primary-color);
   background: var(--surface-hover);
   transform: translateY(-2px);
@@ -909,7 +943,12 @@ main {
   font-size: 0.875rem;
 }
 
-.footer-links a:hover {
+.footer-links a:focus {
+  outline: none;
+}
+
+.footer-links a:hover,
+.footer-links a:focus {
   color: var(--text-primary);
 }
 
@@ -939,6 +978,10 @@ main {
   
   .navbar-container {
     padding: 0 1rem;
+  }
+  
+  .brand-name {
+    display: none;
   }
   
   .avoir-container {
@@ -993,7 +1036,7 @@ main {
   }
   
   .social-links {
-    justify-content: center;
+    justify-content: flex-start;
   }
   
   .download-section {

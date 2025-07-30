@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const navbarLinks = document.querySelectorAll('.navbar-link');
   const avoirButtons = document.querySelectorAll('.avoir-buttons .btn');
   const sectionButtons = document.querySelectorAll('.section-container .btn');
+  const navbarBrand = document.querySelector('.navbar-brand') as HTMLElement;
+  const logo = document.querySelector('.logo') as HTMLImageElement;
+  const brandName = document.querySelector('.brand-name') as HTMLElement;
 
   const animatedText = document.querySelector('.animated-text') as HTMLElement;
   if (animatedText) {
@@ -90,14 +93,22 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    const closeMobileMenu = () => {
+      if (window.innerWidth <= 768 && isMenuOpen) {
+        isMenuOpen = false;
+        navbarMenu.style.display = 'none';
+        mobileMenuToggle.textContent = '☰';
+      }
+    };
+
     navbarLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        if (window.innerWidth <= 768) {
-          isMenuOpen = false;
-          navbarMenu.style.display = 'none';
-          mobileMenuToggle.textContent = '☰';
-        }
-      });
+      link.addEventListener('click', closeMobileMenu);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (isMenuOpen && !navbar.contains(e.target as Node)) {
+        closeMobileMenu();
+      }
     });
   }
 
@@ -121,10 +132,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   navbarLinks.forEach(link => {
     link.addEventListener('click', (e) => {
-      e.preventDefault();
       const targetId = link.getAttribute('href');
       
+      // Close mobile menu
+      if (window.innerWidth <= 768 && isMenuOpen && mobileMenuToggle && navbarMenu) {
+        isMenuOpen = false;
+        navbarMenu.style.display = 'none';
+        mobileMenuToggle.textContent = '☰';
+      }
+      
+      // Only prevent default for anchor links, allow external links to work normally
       if (targetId && targetId.startsWith('#')) {
+        e.preventDefault();
         const targetElement = document.querySelector(targetId);
         if (targetElement) {
           const navbarHeight = document.querySelector('.navbar')?.clientHeight || 80;
@@ -136,6 +155,9 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         }
       }
+      
+      // Remove focus from the clicked link to prevent persistent hover background
+      (link as HTMLElement).blur();
     });
   });
 
@@ -241,5 +263,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  const redirectToHome = () => {
+    window.location.href = 'index.html';
+  };
+
+  if (navbarBrand) {
+    navbarBrand.addEventListener('click', redirectToHome);
+    navbarBrand.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        redirectToHome();
+      }
+    });
+  }
+
+  if (logo) {
+    logo.addEventListener('click', redirectToHome);
+  }
+
+  if (brandName) {
+    brandName.addEventListener('click', redirectToHome);
+  }
 
 });
