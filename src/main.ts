@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const typeWriter = (text: string, callback?: () => void) => {
       let i = 0;
-      const textContent = animatedText.textContent?.replace('|', '') || '';
       animatedText.textContent = '';
       
       const typing = () => {
@@ -141,19 +140,25 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   avoirButtons.forEach(button => {
-    button.addEventListener('click', (e) => {
+    button.addEventListener('click', () => {
       const buttonText = button.textContent?.toLowerCase();
       
       if (buttonText?.includes('creator')) {
-        window.scrollTo({
-          top: document.querySelector('.publisher-case')?.getBoundingClientRect().top + window.pageYOffset - 80 || 0,
-          behavior: 'smooth'
-        });
+        const publisherElement = document.querySelector('.publisher-case');
+        if (publisherElement) {
+          window.scrollTo({
+            top: publisherElement.getBoundingClientRect().top + window.pageYOffset - 80,
+            behavior: 'smooth'
+          });
+        }
       } else if (buttonText?.includes('user')) {
-        window.scrollTo({
-          top: document.querySelector('.user-case')?.getBoundingClientRect().top + window.pageYOffset - 80 || 0,
-          behavior: 'smooth'
-        });
+        const userElement = document.querySelector('.user-case');
+        if (userElement) {
+          window.scrollTo({
+            top: userElement.getBoundingClientRect().top + window.pageYOffset - 80,
+            behavior: 'smooth'
+          });
+        }
       }
     });
   });
@@ -188,8 +193,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const animateElements = document.querySelectorAll('.mobile-screenshot, .console-screenshot, .stat-card');
   animateElements.forEach(el => observer.observe(el));
 
-  const phoneFrames = document.querySelectorAll('.phone-frame');
-  phoneFrames.forEach((frame, index) => {
+  const phoneFrames = document.querySelectorAll('.phone-frame') as NodeListOf<HTMLElement>;
+  phoneFrames.forEach((frame) => {
     frame.addEventListener('mouseenter', () => {
       frame.style.transform = 'rotateY(0deg) rotateX(0deg) scale(1.05)';
     });
