@@ -3,7 +3,7 @@ import './style.css';
 // Centralized URL configuration
 const URLS = {
   // External links
-  whitepaper: 'https://github.com/Open-Store-Foundation/whitepaper/blob/main/Open-Store-Whitepaper-Ru.pdf',
+  whitepaper: 'https://github.com/Open-Store-Foundation/whitepaper/blob/main/open-store-whitepaper-en.pdf',
   docs: 'https://docs.openstore.foundation',
   github: 'https://github.com/Open-Store-Foundation',
   studio: 'https://studio.openstore.foundation',
