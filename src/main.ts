@@ -11,7 +11,8 @@ const URLS = {
   // Community links
   telegram: 'https://t.me/openstore_community',
   discord: 'https://discord.gg/CPmjuPNt',
-  twitter: '#', // Add when available
+  twitter: 'https://x.com/openstorefndn',
+  linktree: 'https://linktr.ee/openstore_foundation',
   
   // Legal links
   termsOfService: 'https://docs.openstore.foundation/terms-of-service',
@@ -44,7 +45,7 @@ const setupNavbarLinks = () => {
         link.setAttribute('rel', 'noopener noreferrer');
         break;
       case 'community':
-        link.setAttribute('href', URLS.telegram);
+        link.setAttribute('href', URLS.linktree);
         link.setAttribute('target', '_blank');
         link.setAttribute('rel', 'noopener noreferrer');
         break;
