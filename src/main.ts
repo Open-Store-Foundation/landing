@@ -407,15 +407,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const formatDropdownBtn = document.getElementById('format-dropdown-btn');
   const formatDropdown = document.getElementById('format-dropdown');
   
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
   if (downloadMainBtn) {
-    downloadMainBtn.addEventListener('click', () => {
+    downloadMainBtn.addEventListener('click', (e) => {
+      e.preventDefault();
       const downloadUrl = 'http://assets.openstore.foundation/0.0.1.apk';
-      const link = document.createElement('a');
-      link.href = downloadUrl;
-      link.download = 'openstore-0.0.1.apk';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      
+      if (isMobile) {
+        window.open(downloadUrl, '_blank', 'noopener,noreferrer');
+      } else {
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = 'openstore-0.0.1.apk';
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
     });
   }
   
