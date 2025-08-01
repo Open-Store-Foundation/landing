@@ -76,6 +76,11 @@ const setupSocialLinks = () => {
           link.setAttribute('rel', 'noopener noreferrer');
         }
         break;
+      case 'github':
+        link.setAttribute('href', URLS.github);
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+        break;
     }
   });
 };
@@ -301,9 +306,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   avoirButtons.forEach(button => {
     button.addEventListener('click', () => {
-      const buttonText = button.textContent?.toLowerCase();
+      const buttonId = button.id;
       
-      if (buttonText?.includes('creator')) {
+      if (buttonId === 'publisher-btn') {
         const publisherElement = document.querySelector('.publisher-case');
         if (publisherElement) {
           window.scrollTo({
@@ -311,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
             behavior: 'smooth'
           });
         }
-      } else if (buttonText?.includes('user')) {
+      } else if (buttonId === 'user-btn') {
         const userElement = document.querySelector('.user-case');
         if (userElement) {
           window.scrollTo({
@@ -366,32 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  const socialLinks = document.querySelectorAll('.social-link');
-  socialLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const platform = link.getAttribute('title')?.toLowerCase();
-      
-      switch (platform) {
-        case 'linkedin':
-          console.log('LinkedIn clicked');
-          break;
-        case 'telegram':
-          console.log('Telegram clicked');
-          break;
-        case 'x (twitter)':
-          console.log('X (Twitter) clicked');
-          break;
-        case 'discord':
-          console.log('Discord clicked');
-          break;
-        default:
-          console.log(`${platform} clicked`);
-      }
-      
-      alert(`${platform?.charAt(0).toUpperCase()}${platform?.slice(1)} link will be implemented soon!`);
-    });
-  });
+
 
   const tabs = document.querySelectorAll('.tab');
   tabs.forEach(tab => {
@@ -421,6 +401,67 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (brandName) {
     brandName.addEventListener('click', redirectToHome);
+  }
+
+  const downloadMainBtn = document.querySelector('.download-main') as HTMLButtonElement;
+  const formatDropdownBtn = document.getElementById('format-dropdown-btn');
+  const formatDropdown = document.getElementById('format-dropdown');
+  
+  if (downloadMainBtn) {
+    downloadMainBtn.addEventListener('click', () => {
+      const downloadUrl = 'http://assets.openstore.foundation/0.0.1.apk';
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = 'openstore-0.0.1.apk';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  }
+  
+  if (formatDropdownBtn && formatDropdown) {
+    formatDropdownBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = formatDropdown.classList.contains('open');
+      
+      if (isOpen) {
+        formatDropdown.classList.remove('open');
+        formatDropdownBtn.classList.remove('open');
+      } else {
+        formatDropdown.classList.add('open');
+        formatDropdownBtn.classList.add('open');
+      }
+    });
+
+    const formatOptions = formatDropdown.querySelectorAll('.format-option');
+    formatOptions.forEach(option => {
+      option.addEventListener('click', (e) => {
+        e.stopPropagation();
+        
+        formatOptions.forEach(opt => opt.classList.remove('active'));
+        option.classList.add('active');
+        
+        const formatName = option.querySelector('.format-name')?.textContent;
+        if (formatName) {
+          formatDropdownBtn.firstChild!.textContent = formatName;
+        }
+        
+        formatDropdown.classList.remove('open');
+        formatDropdownBtn.classList.remove('open');
+      });
+    });
+
+    document.addEventListener('click', () => {
+      formatDropdown.classList.remove('open');
+      formatDropdownBtn.classList.remove('open');
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        formatDropdown.classList.remove('open');
+        formatDropdownBtn.classList.remove('open');
+      }
+    });
   }
 
 });
