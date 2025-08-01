@@ -9,5 +9,5 @@ export default defineConfig({
         download: resolve(__dirname, 'download.html')
       }
     }
-  }
+  },
 }) 
