@@ -87,12 +87,12 @@ lending/
 
 ## Community & Resources
 
-- **Documentation**: [docs.openstore.foundation](https://docs.openstore.foundation)
-- **GitHub**: [Open Store Foundation](https://github.com/Open-Store-Foundation)
-- **Whitepaper**: [Technical Documentation](https://github.com/Open-Store-Foundation/whitepaper/blob/main/open-store-whitepaper-en.pdf)
-- **Telegram**: [Community Chat](https://t.me/openstore_community)
-- **Discord**: [Developer Community](https://discord.gg/CPmjuPNt)
-- **Twitter**: [@openstorefndn](https://x.com/openstorefndn)
+- **[Documentation](https://docs.openstore.foundation)**
+- **[GitHub](https://github.com/Open-Store-Foundation)**
+- **[Whitepaper](https://github.com/Open-Store-Foundation/whitepaper/blob/main/open-store-whitepaper-en.pdf)**
+- **[Telegram](https://t.me/openstore_community)**
+- **[Discord](https://discord.gg/CPmjuPNt)**
+- **[X](https://x.com/openstorefndn)**
 
 ## Publishing Apps
 
