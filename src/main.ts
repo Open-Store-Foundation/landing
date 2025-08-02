@@ -415,7 +415,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const downloadUrl = 'http://assets.openstore.foundation/0.0.1.apk';
       
       if (isMobile) {
-        window.open(downloadUrl, '_blank', 'noopener,noreferrer');
+        window.location.href = downloadUrl;
       } else {
         const link = document.createElement('a');
         link.href = downloadUrl;
