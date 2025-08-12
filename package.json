@@ -1,6 +1,5 @@
 {
   "name": "open-store-lending",
-  "private": false,
   "version": "0.0.1",
   "license": "MIT",
   "type": "module",

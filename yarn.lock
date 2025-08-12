@@ -993,9 +993,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"open-stor-elending@workspace:.":
+"open-store-lending@workspace:.":
   version: 0.0.0-use.local
-  resolution: "open-stor-elending@workspace:."
+  resolution: "open-store-lending@workspace:."
   dependencies:
     typescript: "npm:^5.8.3"
     vite: "npm:^7.0.4"
