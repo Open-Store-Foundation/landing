@@ -328,20 +328,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  sectionButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const buttonText = button.textContent?.toLowerCase();
-      
-      if (buttonText?.includes('download')) {
-        console.log('Download app clicked');
-        alert('Download functionality will be implemented soon!');
-      } else if (buttonText?.includes('create')) {
-        console.log('Create app clicked');
-        alert('Create app functionality will be implemented soon!');
-      }
-    });
-  });
-
   const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -50px 0px'
@@ -360,13 +346,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const phoneFrames = document.querySelectorAll('.phone-frame') as NodeListOf<HTMLElement>;
   phoneFrames.forEach((frame) => {
+    if (frame.closest('.mobile-showcase')) return;
     frame.addEventListener('mouseenter', () => {
       frame.style.transform = 'rotateY(0deg) rotateX(0deg) scale(1.05)';
     });
-    
     frame.addEventListener('mouseleave', () => {
-      frame.style.transform = window.innerWidth > 768 
-        ? 'rotateY(-5deg) rotateX(5deg) scale(1)' 
+      frame.style.transform = window.innerWidth > 768
+        ? 'rotateY(-5deg) rotateX(5deg) scale(1)'
         : 'rotateY(0deg) rotateX(0deg) scale(1)';
     });
   });
@@ -412,7 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (downloadMainBtn) {
     downloadMainBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      const downloadUrl = 'http://assets.openstore.foundation/0.0.1.apk';
+      const downloadUrl = 'https://assets.openstore.foundation/0.0.1.apk';
       
       if (isMobile) {
         window.location.href = downloadUrl;
