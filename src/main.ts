@@ -148,7 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const navbarMenu = document.querySelector('.navbar-menu') as HTMLUListElement;
   const navbarLinks = document.querySelectorAll('.navbar-link');
   const avoirButtons = document.querySelectorAll('.avoir-buttons .btn');
-  const sectionButtons = document.querySelectorAll('.section-container .btn');
   const navbarBrand = document.querySelector('.navbar-brand') as HTMLElement;
   const logo = document.querySelector('.logo') as HTMLImageElement;
   const brandName = document.querySelector('.brand-name') as HTMLElement;
