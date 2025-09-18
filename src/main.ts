@@ -389,20 +389,21 @@ document.addEventListener('DOMContentLoaded', () => {
     brandName.addEventListener('click', redirectToHome);
   }
 
-  const downloadMainBtn = document.querySelector('.download-main') as HTMLButtonElement | null;
+  const ASSETS_BASE = (import.meta as any).env && (import.meta as any).env.DEV ? '' : URLS.assetsBase;
+
+  const downloadMainBtn = document.querySelector('.download-main') as HTMLAnchorElement | null;
   const formatDropdownBtn = document.getElementById('format-dropdown-btn') as HTMLButtonElement | null;
   const formatDropdown = document.getElementById('format-dropdown') as HTMLElement | null;
   const downloadVersionEl = document.querySelector('.download-version') as HTMLElement | null;
   const downloadSizeEl = document.querySelector('.download-size') as HTMLElement | null;
   const downloadInfoEl = document.querySelector('.download-info') as HTMLElement | null;
+  const downloadStatusEl = document.querySelector('.download-status') as HTMLElement | null;
   const platformButtons = document.querySelectorAll('.platform-tabs .tab-button') as NodeListOf<HTMLButtonElement>;
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   let currentExtension = 'apk';
   type LatestInfo = { versionName: string; versionCode: string; checksum: string };
   let latestInfo: LatestInfo | null = null;
   let currentDownloadUrl: string | null = null;
   let currentState: 'idle' | 'loading' | 'success' | 'error' = 'idle';
-  const ASSETS_BASE = (import.meta as any).env && (import.meta as any).env.DEV ? '/os-assets' : URLS.assetsBase;
 
   const getSelectedExtension = () => {
     if (!formatDropdownBtn) return 'apk';
@@ -456,12 +457,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const setLoadingState = () => {
     currentState = 'loading';
     if (downloadMainBtn) {
-      downloadMainBtn.disabled = true;
-      downloadMainBtn.textContent = 'Download';
+      downloadMainBtn.setAttribute('href', '#');
+      downloadMainBtn.setAttribute('aria-disabled', 'true');
+      downloadMainBtn.removeAttribute('title');
+      downloadMainBtn.style.pointerEvents = 'none';
+      downloadMainBtn.style.cursor = 'not-allowed';
+      downloadMainBtn.setAttribute('tabindex', '-1');
+      downloadMainBtn.style.background = 'var(--text-muted)';
+      downloadMainBtn.style.opacity = '0.6';
     }
     if (formatDropdownBtn) {
       formatDropdownBtn.disabled = true;
       formatDropdownBtn.classList.remove('open');
+      formatDropdownBtn.style.background = 'var(--text-muted)';
     }
     if (formatDropdown) {
       formatDropdown.classList.remove('open');
@@ -477,12 +485,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const setErrorState = () => {
     currentState = 'error';
     if (downloadMainBtn) {
-      downloadMainBtn.disabled = true;
-      downloadMainBtn.textContent = 'Download';
+      downloadMainBtn.setAttribute('href', '#');
+      downloadMainBtn.setAttribute('aria-disabled', 'true');
+      downloadMainBtn.removeAttribute('title');
+      downloadMainBtn.style.pointerEvents = 'none';
+      downloadMainBtn.style.cursor = 'not-allowed';
+      downloadMainBtn.setAttribute('tabindex', '-1');
+      downloadMainBtn.style.background = 'var(--text-muted)';
+      downloadMainBtn.style.opacity = '0.6';
     }
     if (formatDropdownBtn) {
       formatDropdownBtn.disabled = true;
       formatDropdownBtn.classList.remove('open');
+      formatDropdownBtn.style.background = 'var(--text-muted)';
     }
     if (formatDropdown) {
       formatDropdown.classList.remove('open');
@@ -519,11 +534,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const setSuccessState = (info: LatestInfo, sizeBytes: number | null) => {
     currentState = 'success';
     if (downloadMainBtn) {
-      downloadMainBtn.disabled = false;
-      downloadMainBtn.textContent = 'Download';
+      downloadMainBtn.setAttribute('aria-disabled', 'false');
+      downloadMainBtn.style.pointerEvents = '';
+      downloadMainBtn.style.cursor = '';
+      downloadMainBtn.removeAttribute('tabindex');
+      downloadMainBtn.style.background = '';
+      downloadMainBtn.style.opacity = '';
+      if (currentDownloadUrl) {
+        downloadMainBtn.setAttribute('href', currentDownloadUrl);
+        downloadMainBtn.setAttribute('download', `openstore-${info.versionName}.${currentExtension}`);
+        downloadMainBtn.setAttribute('rel', 'noopener noreferrer');
+        downloadMainBtn.setAttribute('title', currentDownloadUrl);
+      }
     }
     if (formatDropdownBtn) {
       formatDropdownBtn.disabled = false;
+      formatDropdownBtn.style.background = '';
     }
     if (downloadInfoEl) downloadInfoEl.style.display = '';
     if (downloadMessageEl) downloadMessageEl.style.display = 'none';
@@ -557,8 +583,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const platform = getSelectedPlatform();
     const res = await fetch(`${ASSETS_BASE}/release/${platform}/latest`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch latest');
-    const ct = (res.headers.get('content-type') || '').toLowerCase();
-    if (!ct.startsWith('text/plain')) throw new Error('Invalid content type');
+    // const ct = res.headers.get('content-type') || res.headers.get('Content-Type');
+    // if (ct && !ct.startsWith('plain/text')) throw new Error('Invalid content type');
     const text = (await res.text()).trim();
     const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
     const versionName = lines[0] || '';
@@ -601,21 +627,6 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadMainBtn.addEventListener('click', (e) => {
       if (currentState !== 'success' || !currentDownloadUrl || !latestInfo) {
         e.preventDefault();
-        return;
-      }
-      if (isMobile) {
-        e.preventDefault();
-        window.location.href = currentDownloadUrl;
-      } else {
-        e.preventDefault();
-        const link = document.createElement('a');
-        link.href = currentDownloadUrl;
-        link.download = `openstore-${latestInfo.versionName}.${currentExtension}`;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
       }
     });
   }

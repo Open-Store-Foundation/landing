@@ -298,6 +298,13 @@ main {
   margin: 0 auto;
 }
 
+.download-info-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
 .download-action-container .download-info {
   align-self: stretch;
   width: 100%;

@@ -13,12 +13,10 @@ export default defineConfig({
   server: {
     allowedHosts: [],
     proxy: {
-      '/os-assets/': {
+      '/release': {
         target: 'https://assets.openstore.foundation',
         changeOrigin: true,
-        secure: true,
-        rewrite: (path) => path.replace(/^\/os-assets\//, '/')
       }
-    }
+    },
   }
 }) 
