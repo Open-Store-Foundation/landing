@@ -397,7 +397,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const downloadVersionEl = document.querySelector('.download-version') as HTMLElement | null;
   const downloadSizeEl = document.querySelector('.download-size') as HTMLElement | null;
   const downloadInfoEl = document.querySelector('.download-info') as HTMLElement | null;
-  const downloadStatusEl = document.querySelector('.download-status') as HTMLElement | null;
   const platformButtons = document.querySelectorAll('.platform-tabs .tab-button') as NodeListOf<HTMLButtonElement>;
   let currentExtension = 'apk';
   type LatestInfo = { versionName: string; versionCode: string; checksum: string };
