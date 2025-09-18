@@ -7,6 +7,7 @@ const URLS = {
   docs: 'https://docs.openstore.foundation',
   github: 'https://github.com/Open-Store-Foundation',
   studio: 'https://studio.openstore.foundation',
+  assetsBase: 'https://assets.openstore.foundation',
   
   // Community links
   telegram: 'https://t.me/openstore_community',
@@ -388,23 +389,228 @@ document.addEventListener('DOMContentLoaded', () => {
     brandName.addEventListener('click', redirectToHome);
   }
 
-  const downloadMainBtn = document.querySelector('.download-main') as HTMLButtonElement;
-  const formatDropdownBtn = document.getElementById('format-dropdown-btn');
-  const formatDropdown = document.getElementById('format-dropdown');
-  
+  const downloadMainBtn = document.querySelector('.download-main') as HTMLButtonElement | null;
+  const formatDropdownBtn = document.getElementById('format-dropdown-btn') as HTMLButtonElement | null;
+  const formatDropdown = document.getElementById('format-dropdown') as HTMLElement | null;
+  const downloadVersionEl = document.querySelector('.download-version') as HTMLElement | null;
+  const downloadSizeEl = document.querySelector('.download-size') as HTMLElement | null;
+  const downloadInfoEl = document.querySelector('.download-info') as HTMLElement | null;
+  const platformButtons = document.querySelectorAll('.platform-tabs .tab-button') as NodeListOf<HTMLButtonElement>;
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  
+  let currentExtension = 'apk';
+  type LatestInfo = { versionName: string; versionCode: string; checksum: string };
+  let latestInfo: LatestInfo | null = null;
+  let currentDownloadUrl: string | null = null;
+  let currentState: 'idle' | 'loading' | 'success' | 'error' = 'idle';
+  const ASSETS_BASE = (import.meta as any).env && (import.meta as any).env.DEV ? '/os-assets' : URLS.assetsBase;
+
+  const getSelectedExtension = () => {
+    if (!formatDropdownBtn) return 'apk';
+    const text = formatDropdownBtn.firstChild && (formatDropdownBtn.firstChild as Text).textContent ? (formatDropdownBtn.firstChild as Text).textContent!.trim() : '.apk';
+    return text.replace('.', '').toLowerCase() || 'apk';
+  };
+
+  const formatBytes = (bytes: number) => {
+    if (!Number.isFinite(bytes) || bytes <= 0) return '';
+    const mb = bytes / 1000000;
+    if (mb < 1) return `${(bytes / 1000).toFixed(0)} KB`;
+    return `${mb.toFixed(mb >= 10 ? 0 : 1)} MB`;
+  };
+
+  const getSelectedPlatform = (): string => {
+    const activeBtn = document.querySelector('.platform-tabs .tab-button.active') as HTMLButtonElement | null;
+    const platform = activeBtn?.getAttribute('data-platform') || 'android';
+    return platform;
+  };
+
+  let downloadMessageEl: HTMLElement | null = null;
+  const ensureMessageEl = () => {
+    if (!downloadMessageEl) {
+      downloadMessageEl = document.createElement('div');
+      downloadMessageEl.className = 'download-message download-version';
+      const container = downloadInfoEl?.parentElement;
+      if (container && downloadInfoEl) {
+        container.insertBefore(downloadMessageEl, downloadInfoEl.nextSibling);
+      } else if (container) {
+        container.appendChild(downloadMessageEl);
+      }
+    }
+    return downloadMessageEl;
+  };
+
+  let downloadHashEl: HTMLElement | null = null;
+  const ensureHashEl = () => {
+    if (!downloadHashEl) {
+      downloadHashEl = document.createElement('div');
+      downloadHashEl.className = 'download-hash download-version';
+      const container = downloadInfoEl?.parentElement;
+      if (container && downloadInfoEl) {
+        container.insertBefore(downloadHashEl, downloadMessageEl ? downloadMessageEl : downloadInfoEl.nextSibling);
+      } else if (container) {
+        container.appendChild(downloadHashEl);
+      }
+    }
+    return downloadHashEl;
+  };
+
+  const setLoadingState = () => {
+    currentState = 'loading';
+    if (downloadMainBtn) {
+      downloadMainBtn.disabled = true;
+      downloadMainBtn.textContent = 'Download';
+    }
+    if (formatDropdownBtn) {
+      formatDropdownBtn.disabled = true;
+      formatDropdownBtn.classList.remove('open');
+    }
+    if (formatDropdown) {
+      formatDropdown.classList.remove('open');
+    }
+    if (downloadInfoEl) downloadInfoEl.style.display = 'none';
+    if (downloadHashEl) downloadHashEl.style.display = 'none';
+    const el = ensureMessageEl();
+    el.style.display = '';
+    el.style.color = '';
+    el.textContent = 'Loading…';
+  };
+
+  const setErrorState = () => {
+    currentState = 'error';
+    if (downloadMainBtn) {
+      downloadMainBtn.disabled = true;
+      downloadMainBtn.textContent = 'Download';
+    }
+    if (formatDropdownBtn) {
+      formatDropdownBtn.disabled = true;
+      formatDropdownBtn.classList.remove('open');
+    }
+    if (formatDropdown) {
+      formatDropdown.classList.remove('open');
+    }
+    if (downloadInfoEl) downloadInfoEl.style.display = 'none';
+    if (downloadHashEl) downloadHashEl.style.display = 'none';
+    const el = ensureMessageEl();
+    el.style.display = '';
+    el.style.color = '#ff4d4f';
+    el.textContent = 'Failed to load. ';
+    const retry = document.createElement('a');
+    retry.href = '#';
+    retry.textContent = 'Retry';
+    retry.className = 'retry-link';
+    retry.addEventListener('click', (e) => {
+      e.preventDefault();
+      initDownloadState();
+    });
+    el.appendChild(retry);
+  };
+
+  const ellipsizeChecksum = (checksum: string) => {
+    const idx = checksum.indexOf('0x');
+    if (idx === -1) return checksum;
+    const prefix = checksum.slice(0, idx);
+    const hex = checksum.slice(idx);
+    if (hex.length <= 2 + 12) return checksum;
+    const body = hex.slice(2);
+    const head = body.slice(0, 8);
+    const tail = body.slice(-4);
+    return `${prefix}0x${head}…${tail}`.trim();
+  };
+
+  const setSuccessState = (info: LatestInfo, sizeBytes: number | null) => {
+    currentState = 'success';
+    if (downloadMainBtn) {
+      downloadMainBtn.disabled = false;
+      downloadMainBtn.textContent = 'Download';
+    }
+    if (formatDropdownBtn) {
+      formatDropdownBtn.disabled = false;
+    }
+    if (downloadInfoEl) downloadInfoEl.style.display = '';
+    if (downloadMessageEl) downloadMessageEl.style.display = 'none';
+    if (downloadVersionEl) downloadVersionEl.textContent = `${info.versionName} (${info.versionCode})`;
+    if (downloadSizeEl) downloadSizeEl.textContent = sizeBytes ? formatBytes(sizeBytes) : '';
+    const hashEl = ensureHashEl();
+    hashEl.style.display = '';
+    hashEl.textContent = ellipsizeChecksum(info.checksum);
+    hashEl.setAttribute('title', 'Copy full hash');
+    hashEl.onclick = () => {
+      const full = info.checksum;
+      if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+        navigator.clipboard.writeText(full).then(() => {
+          const existing = hashEl.querySelector('.copy-feedback');
+          if (existing) existing.remove();
+          const fb = document.createElement('span');
+          fb.className = 'copy-feedback';
+          fb.textContent = 'Copied';
+          hashEl.appendChild(fb);
+          requestAnimationFrame(() => { fb.style.opacity = '1'; });
+          setTimeout(() => {
+            fb.style.opacity = '0';
+            setTimeout(() => fb.remove(), 300);
+          }, 1200);
+        }).catch(() => {});
+      }
+    };
+  };
+
+  const fetchLatestInfo = async (): Promise<LatestInfo> => {
+    const platform = getSelectedPlatform();
+    const res = await fetch(`${ASSETS_BASE}/release/${platform}/latest`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('Failed to fetch latest');
+    const ct = (res.headers.get('content-type') || '').toLowerCase();
+    if (!ct.startsWith('text/plain')) throw new Error('Invalid content type');
+    const text = (await res.text()).trim();
+    const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    const versionName = lines[0] || '';
+    const versionCode = lines[1] || '';
+    const checksum = lines[2] || '';
+    if (!versionName) throw new Error('Missing version name');
+    if (!versionCode || Number.isNaN(Number(versionCode))) throw new Error('Invalid version code');
+    if (checksum && !/^SHA256\s+0x[0-9a-fA-F]+$/.test(checksum)) throw new Error('Invalid checksum');
+    return { versionName, versionCode, checksum };
+  };
+
+  const headContentLength = async (url: string): Promise<number | null> => {
+    const res = await fetch(url, { method: 'HEAD' });
+    const len = res.headers.get('Content-Length') || res.headers.get('content-length');
+    if (!len) return null;
+    const n = Number(len);
+    return Number.isFinite(n) ? n : null;
+  };
+
+  const buildUrl = (version: string, ext: string) => {
+    const platform = getSelectedPlatform();
+    return `${ASSETS_BASE}/release/${platform}/${version}/app.${ext}`;
+  };
+
+  const initDownloadState = async () => {
+    try {
+      setLoadingState();
+      currentExtension = getSelectedExtension();
+      latestInfo = await fetchLatestInfo();
+      const url = buildUrl(latestInfo.versionName, currentExtension);
+      const size = await headContentLength(url);
+      currentDownloadUrl = url;
+      setSuccessState(latestInfo, size);
+    } catch (e) {
+      setErrorState();
+    }
+  };
+
   if (downloadMainBtn) {
     downloadMainBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const downloadUrl = 'https://assets.openstore.foundation/0.0.1.apk';
-      
+      if (currentState !== 'success' || !currentDownloadUrl || !latestInfo) {
+        e.preventDefault();
+        return;
+      }
       if (isMobile) {
-        window.location.href = downloadUrl;
+        e.preventDefault();
+        window.location.href = currentDownloadUrl;
       } else {
+        e.preventDefault();
         const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.download = 'openstore-0.0.1.apk';
+        link.href = currentDownloadUrl;
+        link.download = `openstore-${latestInfo.versionName}.${currentExtension}`;
         link.target = '_blank';
         link.rel = 'noopener noreferrer';
         document.body.appendChild(link);
@@ -413,12 +619,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-  
+
   if (formatDropdownBtn && formatDropdown) {
     formatDropdownBtn.addEventListener('click', (e) => {
       e.stopPropagation();
+      if (formatDropdownBtn.disabled) return;
       const isOpen = formatDropdown.classList.contains('open');
-      
       if (isOpen) {
         formatDropdown.classList.remove('open');
         formatDropdownBtn.classList.remove('open');
@@ -432,17 +638,15 @@ document.addEventListener('DOMContentLoaded', () => {
     formatOptions.forEach(option => {
       option.addEventListener('click', (e) => {
         e.stopPropagation();
-        
         formatOptions.forEach(opt => opt.classList.remove('active'));
         option.classList.add('active');
-        
         const formatName = option.querySelector('.format-name')?.textContent;
         if (formatName) {
           formatDropdownBtn.firstChild!.textContent = formatName;
         }
-        
         formatDropdown.classList.remove('open');
         formatDropdownBtn.classList.remove('open');
+        initDownloadState();
       });
     });
 
@@ -457,6 +661,24 @@ document.addEventListener('DOMContentLoaded', () => {
         formatDropdownBtn.classList.remove('open');
       }
     });
+  }
+
+  if (platformButtons && platformButtons.length > 0) {
+    platformButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        platformButtons.forEach(b => {
+          b.classList.remove('active');
+          b.classList.add('inactive');
+        });
+        btn.classList.add('active');
+        btn.classList.remove('inactive');
+        initDownloadState();
+      });
+    });
+  }
+
+  if (downloadMainBtn) {
+    initDownloadState();
   }
 
 });

@@ -175,6 +175,18 @@ body {
   background: var(--primary-hover);
 }
 
+.btn:disabled,
+.btn[disabled] {
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.btn-primary:disabled,
+.btn-primary[disabled] {
+  background: var(--primary-color);
+}
+
 .btn-secondary {
   background: transparent;
   color: var(--primary-color);
@@ -329,6 +341,13 @@ main {
   transform: rotate(180deg);
 }
 
+.download-dropdown:disabled,
+.download-dropdown[disabled] {
+  pointer-events: none;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .format-dropdown {
   position: absolute;
   top: 100%;
@@ -410,6 +429,32 @@ main {
 .download-version,
 .download-size {
   color: var(--text-secondary);
+}
+
+.download-hash {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.copy-feedback {
+  margin-left: 8px;
+  font-size: 0.75rem;
+  color: var(--primary-color);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.retry-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  margin-left: 4px;
+}
+
+.retry-link:hover,
+.retry-link:focus {
+  color: var(--primary-hover);
 }
 
 .avoir {
